@@ -8,6 +8,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add'
 import Typography from '@material-ui/core/Typography'
 import { TextField } from '../../shared/FormFields'
+import communication from '../../communication/communication.js'
 
 const useStyles = makeStyles({
   card: {
@@ -72,6 +73,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                     ...todos.slice(0, index),
                     ...todos.slice(index + 1)
                   ])
+                  communication.updateData(toDoList)
                 }}
               >
                 <DeleteIcon />
@@ -83,12 +85,26 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
               type='button'
               color='primary'
               onClick={() => {
-                setTodos([...todos, ''])
+                setTodos([...todos, '']);
               }}
             >
               Add Todo <AddIcon />
             </Button>
-            <Button type='submit' variant='contained' color='primary'>
+            <Button 
+              type='submit' 
+              variant='contained' 
+              color='primary' 
+              onClick = {() => communication.updateData(toDoList)} //put data
+            >
+              Save
+            </Button>
+
+            <Button 
+              type='submit' 
+              variant='contained' 
+              color='primary' 
+              onClick = {() => communication.getData()} //put data
+            >
               Save
             </Button>
           </CardActions>
