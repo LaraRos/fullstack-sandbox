@@ -8,6 +8,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add'
 import CheckBoxIcon from '@material-ui/icons/Check'
 import Typography from '@material-ui/core/Typography'
+import NotificationsIcon from '@material-ui/icons/Notifications'
 import { TextField } from '../../shared/FormFields'
 import communication from '../../communication/communication.js'
 
@@ -71,9 +72,12 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 size='small'
                 color='secondary'
                 className={classes.standardSpace}
-                onClick={() => currentTodo.checked = !currentTodo.checked}
+                onClick={() => {
+                  currentTodo.checked = !currentTodo.checked
+                  communication.updateData(toDoList)
+                }}
               >
-                <CheckBoxIcon />
+                {currentTodo.checked? <CheckBoxIcon /> : <NotificationsIcon />}
               </Button>
 
               {/* Button for deletion */}

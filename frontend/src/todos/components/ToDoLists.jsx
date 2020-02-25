@@ -6,6 +6,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ReceiptIcon from '@material-ui/icons/Receipt'
+import DoneAllIcon from '@material-ui/icons/DoneAll'
 import Typography from '@material-ui/core/Typography'
 import { ToDoListForm } from './ToDoListForm'
 import communication from '../../communication/communication.js'
@@ -51,7 +52,8 @@ export const ToDoLists = ({ style }) => {
             <ListItemIcon>
               <ReceiptIcon />
             </ListItemIcon>
-            <ListItemText primary={checkIfCompleted(toDoLists[key]) ? toDoLists[key].title + " - COMPLETED" : toDoLists[key].title} />
+            <ListItemText primary={toDoLists[key].title} />
+            {checkIfCompleted(toDoLists[key])? <DoneAllIcon />  : null}
           </ListItem>)}
         </List>
       </CardContent>
