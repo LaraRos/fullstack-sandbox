@@ -33,13 +33,37 @@ const useStyles = makeStyles({
   }
 })
 
+
+
 export const ToDoListForm = ({ toDoList, saveToDoList }) => {
+  let timer = undefined
   const classes = useStyles()
   const [todos, setTodos] = useState(toDoList.todos)
 
   const handleSubmit = event => {
     event.preventDefault()
     saveToDoList(toDoList.id, { todos })
+    communication.updateData(toDoList)
+  }
+
+  const handleChange = event => {
+    event.preventDefault()
+    saveToDoList(toDoList.id, { todos })
+    debounce(1000)
+  }
+
+  const debounce = (delay) => {
+    console.log("hi")
+    if(timer) {
+      clearTimeout(timer);
+    }
+
+    timer = setTimeout(function() {
+      // Call function
+      communication.updateData(toDoList)
+      // Set timer to undefined
+      timer = undefined;
+    }, delay);
   }
 
   return (
@@ -48,7 +72,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
         <Typography component='h2'>
           {toDoList.title}
         </Typography>
-        <form onSubmit={handleSubmit} className={classes.form}>
+        <form onChange={handleChange} className={classes.form}>
           {todos.map((currentTodo, index) => (
             <div key={index} className={classes.todoLine}>
               <Typography className={classes.standardSpace} variant='h6'>
@@ -74,7 +98,8 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 className={classes.standardSpace}
                 onClick={() => {
                   currentTodo.checked = !currentTodo.checked
-                  communication.updateData(toDoList)
+                  
+                  // communication.updateData(toDoList)
                 }}
               >
                 {currentTodo.checked? <CheckBoxIcon /> : <NotificationsIcon />}
@@ -90,7 +115,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                     ...todos.slice(0, index),
                     ...todos.slice(index + 1)
                   ])
-                  communication.updateData(toDoList)
+                  // communication.updateData(toDoList)
                 }}
               >
                 <DeleteIcon />
@@ -111,7 +136,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
               type='submit' 
               variant='contained' 
               color='primary' 
-              onClick = {() => communication.updateData(toDoList)} //put data
+              // onClick = {() => communication.updateData(toDoList)} //put data
             >
               Save
             </Button>
