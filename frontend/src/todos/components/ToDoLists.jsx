@@ -12,12 +12,17 @@ import communication from '../../communication/communication.js'
 
 // const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
+const checkIfCompleted = (toDoList) => {
+  return (toDoList.todos.filter(todo => todo.checked === false)).length === 0
+}
+
 const getPersonalTodos = () => {
   return communication.getData()
     .then(result => ({
       '0000000001': result[0],
       '0000000002': result[1]
     }))
+
 }
 export const ToDoLists = ({ style }) => {
   const [toDoLists, setToDoLists] = useState({})
@@ -46,7 +51,7 @@ export const ToDoLists = ({ style }) => {
             <ListItemIcon>
               <ReceiptIcon />
             </ListItemIcon>
-            <ListItemText primary={toDoLists[key].title} />
+            <ListItemText primary={checkIfCompleted(toDoLists[key]) ? toDoLists[key].title + " - COMPLETED" : toDoLists[key].title} />
           </ListItem>)}
         </List>
       </CardContent>

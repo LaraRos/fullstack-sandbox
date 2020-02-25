@@ -6,6 +6,7 @@ import CardActions from '@material-ui/core/CardActions'
 import Button from '@material-ui/core/Button'
 import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add'
+import CheckBoxIcon from '@material-ui/icons/Check'
 import Typography from '@material-ui/core/Typography'
 import { TextField } from '../../shared/FormFields'
 import communication from '../../communication/communication.js'
@@ -47,23 +48,35 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
           {toDoList.title}
         </Typography>
         <form onSubmit={handleSubmit} className={classes.form}>
-          {todos.map((name, index) => (
+          {todos.map((currentTodo, index) => (
             <div key={index} className={classes.todoLine}>
               <Typography className={classes.standardSpace} variant='h6'>
                 {index + 1}
               </Typography>
               <TextField
                 label='What to do?'
-                value={name}
+                value={currentTodo.todo}
                 onChange={event => {
                   setTodos([ // immutable update
                     ...todos.slice(0, index),
-                    event.target.value,
+                    {todo: event.target.value, checked: false},
                     ...todos.slice(index + 1)
                   ])
                 }}
                 className={classes.textField}
               />
+
+              {/* Button for completion */}
+              <Button
+                size='small'
+                color='secondary'
+                className={classes.standardSpace}
+                onClick={() => currentTodo.checked = !currentTodo.checked}
+              >
+                <CheckBoxIcon />
+              </Button>
+
+              {/* Button for deletion */}
               <Button
                 size='small'
                 color='secondary'
@@ -95,15 +108,6 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
               variant='contained' 
               color='primary' 
               onClick = {() => communication.updateData(toDoList)} //put data
-            >
-              Save
-            </Button>
-
-            <Button 
-              type='submit' 
-              variant='contained' 
-              color='primary' 
-              onClick = {() => communication.getData()} //put data
             >
               Save
             </Button>
