@@ -84,7 +84,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
         <Typography component='h2'>
           {toDoList.title}
         </Typography>
-        <form onChange={handleChange} className={classes.form}>
+        <form onSubmit={handleSubmit} className={classes.form}>
           {todos.map((currentTodo, index) => (
             <div key={index} className={classes.todoLine}>
               <Typography className={classes.standardSpace} variant='h6'>
