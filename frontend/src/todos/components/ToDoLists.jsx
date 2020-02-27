@@ -13,12 +13,24 @@ import communication from '../../communication/communication.js'
 
 // const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
+const getData = () => {
+  return fetch('http://localhost:3001/todos', {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json'
+        }
+  })
+      .then(communication.handleHTTPError)
+      .then(response => response.json())
+      .catch(console.error)
+}
+
 const checkIfCompleted = (toDoList) => {
   return (toDoList.todos.filter(todo => todo.checked === false)).length === 0
 }
 
 const getPersonalTodos = () => {
-  return communication.getData()
+  return getData()
     .then(result => ({
       '0000000001': result[0],
       '0000000002': result[1]
@@ -61,8 +73,10 @@ export const ToDoLists = ({ style }) => {
     {toDoLists[activeList] && <ToDoListForm
       key={activeList} // use key to make React recreate component to reset internal state
       toDoList={toDoLists[activeList]}
-      saveToDoList={(id, { todos }) => {
+
+      saveToDoList = {(id, { todos }) => {
         const listToUpdate = toDoLists[id]
+
         setToDoLists({
           ...toDoLists,
           [id]: { ...listToUpdate, todos }

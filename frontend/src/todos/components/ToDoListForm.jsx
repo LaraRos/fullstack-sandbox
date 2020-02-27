@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
@@ -40,27 +40,39 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
   const classes = useStyles()
   const [todos, setTodos] = useState(toDoList.todos)
 
+  const updateData = async () => {
+    console.log(toDoList.todos)
+    fetch("http://localhost:3001/todos/" + toDoList.id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(toDoList),
+        params: {"id": parseInt(toDoList.id)}
+    })
+}
+
   const handleSubmit = event => {
     event.preventDefault()
     saveToDoList(toDoList.id, { todos })
-    communication.updateData(toDoList)
+    updateData()
   }
 
   const handleChange = event => {
     event.preventDefault()
+    
     saveToDoList(toDoList.id, { todos })
-    debounce(1000)
+    //updateData()
+    //communication.updateData(toDoList)
+    debounce(200)
   }
 
   const debounce = (delay) => {
-    console.log("hi")
     if(timer) {
       clearTimeout(timer);
     }
 
     timer = setTimeout(function() {
       // Call function
-      communication.updateData(toDoList)
+      updateData()
       // Set timer to undefined
       timer = undefined;
     }, delay);
@@ -84,9 +96,10 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 onChange={event => {
                   setTodos([ // immutable update
                     ...todos.slice(0, index),
-                    {todo: event.target.value, checked: false},
+                    {todo: event.target.value, checked: currentTodo.checked},
                     ...todos.slice(index + 1)
                   ])
+                  
                 }}
                 className={classes.textField}
               />
@@ -97,11 +110,15 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 color='secondary'
                 className={classes.standardSpace}
                 onClick={() => {
-                  currentTodo.checked = !currentTodo.checked
-                  
-                  // communication.updateData(toDoList)
+                  console.log(currentTodo.checked)
+                  setTodos([
+                    ...todos.slice(0, index),
+                    {todo: currentTodo.todo, checked: !currentTodo.checked},
+                    ...todos.slice(index + 1)
+                  ])
+                  debounce(100)
                 }}
-              >
+              >              
                 {currentTodo.checked? <CheckBoxIcon /> : <NotificationsIcon />}
               </Button>
 
@@ -115,7 +132,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                     ...todos.slice(0, index),
                     ...todos.slice(index + 1)
                   ])
-                  // communication.updateData(toDoList)
+                  debounce(100)
                 }}
               >
                 <DeleteIcon />
@@ -123,20 +140,22 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
             </div>
           ))}
           <CardActions>
+            {/* Button for adding todos */}
             <Button
               type='button'
               color='primary'
               onClick={() => {
-                setTodos([...todos, '']);
+                setTodos([...todos, {todo: '', checked: false}]);
               }}
             >
               Add Todo <AddIcon />
             </Button>
+
+            {/* Button for saving todos */}
             <Button 
               type='submit' 
               variant='contained' 
               color='primary' 
-              // onClick = {() => communication.updateData(toDoList)} //put data
             >
               Save
             </Button>

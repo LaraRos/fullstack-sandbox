@@ -32,7 +32,9 @@ app.get('/todos', (req, res) => res.send(fullTodos))
 app.put('/todos/:id', function(req, res) {
     console.log("Received put")
     let id = req.params.id - 1 // Subtract by 1 because list id starts at 1
+    console.log(req.body)
     fullTodos[id] = req.body
+    console.log(fullTodos[0].todos)
     res.send("Backend: PUT")
 })
 
