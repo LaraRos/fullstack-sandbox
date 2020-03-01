@@ -13,7 +13,7 @@ import communication from '../../communication/communication.js'
 
 // const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const getData = () => {
+const getData = async () => {
   return fetch('http://localhost:3001/todos', {
       method: 'GET',
       headers: {
@@ -37,6 +37,8 @@ const getPersonalTodos = () => {
     }))
 
 }
+
+
 export const ToDoLists = ({ style }) => {
   const [toDoLists, setToDoLists] = useState({})
   const [activeList, setActiveList] = useState()

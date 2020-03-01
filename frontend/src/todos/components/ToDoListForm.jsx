@@ -52,31 +52,15 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
 
   const handleSubmit = event => {
     event.preventDefault()
-    saveToDoList(toDoList.id, { todos })
     updateData()
-  }
-
-  const handleChange = event => {
-    event.preventDefault()
-    
     saveToDoList(toDoList.id, { todos })
-    //updateData()
-    //communication.updateData(toDoList)
-    debounce(200)
+    
   }
 
-  const debounce = (delay) => {
-    if(timer) {
-      clearTimeout(timer);
-    }
 
-    timer = setTimeout(function() {
-      // Call function
-      updateData()
-      // Set timer to undefined
-      timer = undefined;
-    }, delay);
-  }
+  useEffect( () => {
+    saveToDoList(toDoList.id, { todos })
+  }, [todos])
 
   return (
     <Card className={classes.card}>
@@ -90,6 +74,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
               <Typography className={classes.standardSpace} variant='h6'>
                 {index + 1}
               </Typography>
+
               <TextField
                 label='What to do?'
                 value={currentTodo.todo}
@@ -99,7 +84,6 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                     {todo: event.target.value, checked: currentTodo.checked},
                     ...todos.slice(index + 1)
                   ])
-                  
                 }}
                 className={classes.textField}
               />
@@ -110,13 +94,13 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 color='secondary'
                 className={classes.standardSpace}
                 onClick={() => {
-                  console.log(currentTodo.checked)
+
                   setTodos([
                     ...todos.slice(0, index),
                     {todo: currentTodo.todo, checked: !currentTodo.checked},
                     ...todos.slice(index + 1)
                   ])
-                  debounce(100)
+
                 }}
               >              
                 {currentTodo.checked? <CheckBoxIcon /> : <NotificationsIcon />}
@@ -132,7 +116,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                     ...todos.slice(0, index),
                     ...todos.slice(index + 1)
                   ])
-                  debounce(100)
+                  // saveToDoList(toDoList.id, { todos })
                 }}
               >
                 <DeleteIcon />
@@ -145,7 +129,8 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
               type='button'
               color='primary'
               onClick={() => {
-                setTodos([...todos, {todo: '', checked: false}]);
+                setTodos([...todos, {todo: '', checked: false}])
+                saveToDoList(toDoList.id, { todos })
               }}
             >
               Add Todo <AddIcon />
