@@ -36,12 +36,12 @@ const useStyles = makeStyles({
 
 
 export const ToDoListForm = ({ toDoList, saveToDoList }) => {
-  let timer = undefined
   const classes = useStyles()
   const [todos, setTodos] = useState(toDoList.todos)
 
   const updateData = async () => {
-    console.log(toDoList.todos)
+    toDoList.todos = todos
+    
     fetch("http://localhost:3001/todos/" + toDoList.id, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -59,7 +59,13 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
 
 
   useEffect( () => {
-    saveToDoList(toDoList.id, { todos })
+    const timer = setTimeout(() => {
+      saveToDoList(toDoList.id, { todos });
+      updateData();
+      
+    }, 200);
+    return () => clearTimeout(timer);
+
   }, [todos])
 
   return (
@@ -116,7 +122,6 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                     ...todos.slice(0, index),
                     ...todos.slice(index + 1)
                   ])
-                  // saveToDoList(toDoList.id, { todos })
                 }}
               >
                 <DeleteIcon />
@@ -130,7 +135,6 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
               color='primary'
               onClick={() => {
                 setTodos([...todos, {todo: '', checked: false}])
-                saveToDoList(toDoList.id, { todos })
               }}
             >
               Add Todo <AddIcon />
