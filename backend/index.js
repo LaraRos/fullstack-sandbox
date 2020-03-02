@@ -16,12 +16,12 @@ const PORT = 3001
 let toDoList1 = {
     id: "0000000001",
     title: "First List",
-    todos: [{todo: "First todo of first list!", checked: false}]}
+    todos: [{todo: "First todo of first list!", checked: false, date: 'yyyy-mm-dd'}]}
 
 let toDoList2 = {
     id: "0000000002",
     title: "Second List",
-    todos: [{todo: "First todo of second list!", checked: false}]}
+    todos: [{todo: "First todo of second list!", checked: false, date: 'yyyy-mm-dd'}]}
 
 fullTodos = [toDoList1, toDoList2]
 

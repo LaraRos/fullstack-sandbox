@@ -37,6 +37,7 @@ const useStyles = makeStyles({
 
 export const ToDoListForm = ({ toDoList, saveToDoList }) => {
   const classes = useStyles()
+  
   const [todos, setTodos] = useState(toDoList.todos)
 
   const updateData = async () => {
@@ -56,7 +57,6 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
     saveToDoList(toDoList.id, { todos })
     
   }
-
 
   useEffect( () => {
     const timer = setTimeout(() => {
@@ -87,11 +87,32 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 onChange={event => {
                   setTodos([ // immutable update
                     ...todos.slice(0, index),
-                    {todo: event.target.value, checked: currentTodo.checked},
+                    {todo: event.target.value, checked: currentTodo.checked, date: currentTodo.date},
                     ...todos.slice(index + 1)
                   ])
                 }}
                 className={classes.textField}
+              />
+
+              <TextField
+                type="date"
+                className={classes.textField}
+                label={"(yyyy-mm-dd)"}
+                value={currentTodo.date}
+                onChange={event => {
+                  setTodos([ // immutable update
+                    ...todos.slice(0, index),
+                    {todo: currentTodo.todo, checked: currentTodo.checked, date: event.target.value},
+                    ...todos.slice(index + 1)
+                  ])
+                }}
+              />
+
+              <TextField
+                type="date"
+                className={classes.textField}
+                label={"Time left in days"}
+                value={isNaN(parseInt(((new Date(currentTodo.date)) - new Date())/(24*3600*1000))) || currentTodo.date.length !== 10 ? "Enter date" : parseInt(((new Date(currentTodo.date)) - new Date())/(24*3600*1000))}
               />
 
               {/* Button for completion */}
@@ -100,10 +121,9 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
                 color='secondary'
                 className={classes.standardSpace}
                 onClick={() => {
-
                   setTodos([
                     ...todos.slice(0, index),
-                    {todo: currentTodo.todo, checked: !currentTodo.checked},
+                    {todo: currentTodo.todo, checked: !currentTodo.checked, date: currentTodo.date},
                     ...todos.slice(index + 1)
                   ])
 
@@ -134,7 +154,7 @@ export const ToDoListForm = ({ toDoList, saveToDoList }) => {
               type='button'
               color='primary'
               onClick={() => {
-                setTodos([...todos, {todo: '', checked: false}])
+                setTodos([...todos, {todo: '', checked: false, date: 'yyyy-mm-dd'}])
               }}
             >
               Add Todo <AddIcon />
